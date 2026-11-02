@@ -9,7 +9,8 @@
     "preview": "vite preview --host 127.0.0.1",
     "test": "vitest run",
     "test:watch": "vitest",
-    "qa": "npm run build && node scripts/qa.mjs"
+    "qa": "npm run build && node scripts/qa.mjs",
+    "audit": "node audit-play.mjs"
   },
   "keywords": [],
   "author": "",
