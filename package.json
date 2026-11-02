@@ -10,7 +10,9 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "qa": "npm run build && node scripts/qa.mjs",
-    "audit": "node audit-play.mjs"
+    "audit": "node audit-play.mjs",
+    "music": "node scripts/music.mjs",
+    "promo": "node scripts/promo.mjs && node scripts/promo-compose.mjs"
   },
   "keywords": [],
   "author": "",

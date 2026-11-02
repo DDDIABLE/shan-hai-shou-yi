@@ -25,7 +25,10 @@ export function cellToWorld(pos: Pos): THREE.Vector3 {
 }
 
 export function faceEnemy(group: THREE.Group, side: Side): void {
-  group.rotation.y = side === 'crimson' ? Math.PI : 0;
+  // 模型的正面（眼睛、口鼻、名牌）位于局部 +z。
+  // 苍岚泽在北侧（y 小），应面向南方的赤霞山，即世界 +z，需要绕 y 转 PI。
+  // 赤霞山在南侧（y 大），应面向北方的苍岚泽，即世界 -z，保持朝向 0。
+  group.rotation.y = side === 'teal' ? Math.PI : 0;
 }
 
 export function worldToCell(point: THREE.Vector3): Pos {
@@ -716,7 +719,7 @@ export class BeastScene {
         node.kind = 'idle';
         node.group.position.copy(node.target);
         node.group.rotation.z = 0;
-        node.group.rotation.y = node.piece.side === 'crimson' ? Math.PI : 0;
+      faceEnemy(node.group, node.piece.side);
       }
     }
     this.animations = this.animations.filter((animation) => animation(delta));

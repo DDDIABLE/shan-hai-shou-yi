@@ -1,10 +1,10 @@
 {
-  "url": "https://dddiable.github.io/shan-hai-shou-yi/",
+  "url": "http://127.0.0.1:4319/",
   "checks": [
     {
       "name": "页面首屏加载",
       "ok": true,
-      "detail": "2487ms"
+      "detail": "130ms"
     },
     {
       "name": "无失败请求",

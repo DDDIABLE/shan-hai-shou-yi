@@ -2,5 +2,9 @@ node_modules
 dist
 qa/*.png
 qa/qa-report.json
+qa/*.wav
+qa/*.webm
+qa/*.mp4
+qa/recordings
 *.local
 .DS_Store

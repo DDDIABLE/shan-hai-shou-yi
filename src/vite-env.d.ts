@@ -8,7 +8,12 @@ declare global {
     __shanHaiMoves?: number;
     __shanHaiScene?: { renders: number; pieces: number; reducedMotion: boolean; orientations?: Record<string, number> };
     __shanHaiAi?: { mode: string; at: number };
-    __shanHaiSceneRef?: { current: unknown } | null;
+    __shanHaiSceneRef?: {
+      current: {
+        renderOnce: () => void;
+        setCameraOrbit: (azimuth: number, polar: number, distance: number) => void;
+      } | null;
+    } | null;
     __shanHaiStep?: () => boolean;
   }
 }

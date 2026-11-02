@@ -274,8 +274,10 @@ async function runDesktop(browser) {
     orientation !== null &&
       orientation.crimson.length === 8 &&
       orientation.teal.length === 8 &&
-      orientation.crimson.every((value) => Math.abs(value - Math.PI) < 0.01) &&
-      orientation.teal.every((value) => Math.abs(value) < 0.01),
+      // 模型正面在局部 +z。赤霞山在南侧，要面向北（世界 -z），朝向 0；
+      // 苍岚泽在北侧，要面向南（世界 +z），朝向 PI。两者必须相对。
+      orientation.crimson.every((value) => Math.abs(value) < 0.01) &&
+      orientation.teal.every((value) => Math.abs(value - Math.PI) < 0.01),
     orientation ? `crimson=${orientation.crimson[0]} teal=${orientation.teal[0]}` : 'no-data',
   );
 
