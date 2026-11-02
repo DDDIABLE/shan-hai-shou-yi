@@ -1,0 +1,6 @@
+node_modules
+dist
+qa/*.png
+qa/qa-report.json
+*.local
+.DS_Store
