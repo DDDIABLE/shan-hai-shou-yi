@@ -36,7 +36,8 @@ execFileSync('ffmpeg', [
   '-c:a', 'aac',
   '-b:a', '160k',
   '-t', '30',
-  '-vf', 'fps=30,scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2',
+  '-vf', 'fps=60,scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2',
+  '-r', '60',
   outputPath,
 ], { stdio: 'inherit' });
 

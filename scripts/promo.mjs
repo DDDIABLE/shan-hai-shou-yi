@@ -46,7 +46,7 @@ const browser = await chromium.launch({
 const context = await browser.newContext({
   viewport: { width: 1920, height: 1080 },
   deviceScaleFactor: 1,
-  recordVideo: { dir: recordDir, size: { width: 1920, height: 1080 } },
+  recordVideo: { dir: recordDir, size: { width: 1920, height: 1080 }, fps: 60 },
 });
 
 const page = await context.newPage();
@@ -78,6 +78,23 @@ async function waitRendered(minPieces) {
   );
 }
 
+/**
+ * 在页面内连续运镜：每帧朝目标方位角/俯仰/距离推进一档。
+ * 比一次 setCameraOrbit 更像手持跟拍，能呈现持续旋转与缩放。
+ */
+async function orbitTween(from, to, frames, interval = 33) {
+  for (let index = 1; index <= frames; index += 1) {
+    const ratio = index / frames;
+    const eased = 1 - (1 - ratio) ** 3;
+    await setOrbit(
+      from[0] + (to[0] - from[0]) * eased,
+      from[1] + (to[1] - from[1]) * eased,
+      from[2] + (to[2] - from[2]) * eased,
+    );
+    await sleep(interval);
+  }
+}
+
 try {
   await page.goto(BASE, { waitUntil: 'load' });
   await page.waitForSelector('[data-testid="enter-game"]', { timeout: 25000 });
@@ -93,69 +110,76 @@ try {
   await page.click('[data-testid="difficulty-hard"]');
   await hold(3.2);
 
-  // 3.2-6.8s 进入对局，旋转 + 缩放
+  // 3.2-7.0s 进入对局：连续运镜环绕沙盘 + 推近拉远
   await page.click('[data-testid="enter-game"]');
   await page.waitForSelector('[data-testid="beast-canvas"]');
   await waitRendered(16);
-  await setOrbit(0, 0.84, 14.2);
-  await hold(5.2);
+  await orbitTween([0, 0.84, 14.2], [1.35, 0.62, 11.4], 26, 34);
   await page.screenshot({ path: resolve(qaDir, 'promo-shot-opening.png') });
 
+  // 7.0-8.6s 真实拖拽 + 滚轮，展示交互
   const canvasBox = await page.locator('[data-testid="beast-canvas"]').boundingBox();
   const cx = canvasBox.x + canvasBox.width / 2;
   const cy = canvasBox.y + canvasBox.height / 2;
   await page.mouse.move(cx, cy);
   await page.mouse.down();
-  await page.mouse.move(cx - 300, cy - 40, { steps: 20 });
+  await page.mouse.move(cx - 240, cy - 50, { steps: 14 });
   await page.mouse.up();
-  await page.mouse.wheel(0, -500);
-  await page.mouse.wheel(0, 300);
-  await hold(6.8);
+  await page.mouse.wheel(0, -420);
+  await sleep(350);
+  await page.mouse.wheel(0, 260);
+  await hold(8.6);
   await page.screenshot({ path: resolve(qaDir, 'promo-shot-orbit.png') });
 
-  // 6.8-11.5s 选子、合法落点、落子
-  await setOrbit(0, 0.84, 14.2);
+  // 8.6-13.0s 选子、合法落点、落子动画
+  await setOrbit(0, 0.84, 13.6);
   await page.click('[data-testid="keyboard-toggle"]');
   const turnText = await page.locator('.turn-chip').innerText();
   const side = turnText.includes('赤霞山') ? 'side-crimson' : 'side-teal';
   await page.locator(`.keyboard-cell.${side}`).nth(2).click();
-  await hold(7.8);
+  await hold(10.2);
   await page.screenshot({ path: resolve(qaDir, 'promo-shot-select.png') });
 
   const legal = page.locator('.keyboard-cell.is-legal').first();
   if (await legal.count()) {
     await legal.click();
   }
-  await hold(9.2);
+  await hold(11.8);
   await page.screenshot({ path: resolve(qaDir, 'promo-shot-move.png') });
 
-  // 11.5-15.5s 规则面板 + 设置面板
+  // 13.0-17.2s 规则面板 + 设置面板
   await page.click('[data-testid="keyboard-toggle"]');
   await page.click('[data-testid="open-rules"]');
-  await hold(12.4);
+  await hold(14.6);
   await page.screenshot({ path: resolve(qaDir, 'promo-shot-rules.png') });
   await page.locator('[data-testid="game-sidebar"] [data-testid="close-rules"]').click();
 
   await page.click('[data-testid="open-settings"]');
-  await hold(15.4);
+  await hold(17.0);
   await page.screenshot({ path: resolve(qaDir, 'promo-shot-settings.png') });
   await page.locator('[data-testid="game-sidebar"] [data-testid="close-settings"]').click();
 
-  // 15.5-27s 观战模式：自动对局 + 暂停 + 单步 + 2x
+  // 17.2-29.4s 观战模式：2x 自动对局，呈现吃子/跃河/入水等动画
   await page.click('[data-testid="back-menu"]');
   await page.click('[data-testid="mode-watch"]');
   await page.click('[data-testid="enter-game"]');
   await waitRendered(16);
-  await hold(18.2);
-  await setOrbit(0.6, 0.72, 13.0);
-  await hold(20.6);
+  await page.click('[data-testid="speed-2"]');
+  await orbitTween([0, 0.84, 14.2], [-1.2, 0.68, 12.2], 22, 34);
+  await hold(20.2);
   await page.screenshot({ path: resolve(qaDir, 'promo-shot-watch.png') });
 
+  // 20.2-24.5s 暂停 + 单步，展示控制
   await page.click('[data-testid="pause-toggle"]');
-  await page.click('[data-testid="speed-2"]');
-  await hold(22.2);
+  await hold(21.4);
+  await page.click('[data-testid="step-button"]');
+  await hold(22.8);
+  await page.click('[data-testid="step-button"]');
+  await hold(24.0);
+
+  // 24.0-29.4s 恢复自动，继续对局
   await page.click('[data-testid="pause-toggle"]');
-  await hold(29.2);
+  await hold(29.4);
   await page.screenshot({ path: resolve(qaDir, 'promo-shot-final.png') });
 
   await hold(30.0);
