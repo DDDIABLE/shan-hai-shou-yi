@@ -88,8 +88,8 @@ export const DIFFICULTY_CONFIG: Record<
   { maxDepth: number; nodeBudget: number; label: string }
 > = {
   easy: { maxDepth: 1, nodeBudget: 1500, label: '初醒' },
-  normal: { maxDepth: 3, nodeBudget: 12000, label: '通幽' },
-  hard: { maxDepth: 5, nodeBudget: 32000, label: '镇海' },
+  normal: { maxDepth: 3, nodeBudget: 9000, label: '通幽' },
+  hard: { maxDepth: 5, nodeBudget: 16000, label: '镇海' },
 };
 
 export const SIDE_NAMES: Record<Side, string> = {

@@ -1,6 +1,7 @@
 import {
   applyMove,
   BEAST_VALUES,
+  DIFFICULTY_CONFIG,
   enemyDenOf,
   getLegalMoves,
   isEnemyTrap,
@@ -9,11 +10,7 @@ import {
 } from './board';
 import type { AiDifficulty, BeastType, GameState, Move, Pos, Side } from './types';
 
-export const AI_CONFIG = {
-  easy: { maxDepth: 1, nodeBudget: 1500 },
-  normal: { maxDepth: 3, nodeBudget: 12000 },
-  hard: { maxDepth: 5, nodeBudget: 32000 },
-} as const;
+export const AI_CONFIG = DIFFICULTY_CONFIG;
 
 const PIECE_VALUE: Record<BeastType, number> = BEAST_VALUES;
 

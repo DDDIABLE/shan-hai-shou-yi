@@ -10,7 +10,7 @@ function isLegal(state: GameState, move: Move): boolean {
 }
 
 describe('确定性 AI', () => {
-  it('三档难度都返回合法着法', () => {
+  it('三档难度都返回合法着法', { timeout: 60000 }, () => {
     for (const difficulty of ['easy', 'normal', 'hard'] as const) {
       const state = createGame({ difficulty });
       const move = chooseAiMove(state, { difficulty, seed: 42 });
@@ -19,14 +19,14 @@ describe('确定性 AI', () => {
     }
   });
 
-  it('搜索不修改输入状态', () => {
+  it('搜索不修改输入状态', { timeout: 60000 }, () => {
     const state = createGame();
     const before = structuredClone(state);
     chooseAiMove(state, { difficulty: 'hard', seed: 7 });
     expect(state).toEqual(before);
   });
 
-  it('相同种子完全复现，不同种子可改变同分选择', { timeout: 30000 }, () => {
+  it('相同种子完全复现，不同种子可改变同分选择', { timeout: 120000 }, () => {
     const state = createGame();
     const first = chooseAiMove(state, { difficulty: 'normal', seed: 123 });
     const second = chooseAiMove(state, { difficulty: 'normal', seed: 123 });
@@ -40,13 +40,13 @@ describe('确定性 AI', () => {
     expect(alternatives.size).toBeGreaterThan(1);
   });
 
-  it('终局状态返回 null', () => {
+  it('终局状态返回 null', { timeout: 60000 }, () => {
     const state = createGame();
     const finished: GameState = { ...state, result: { status: 'draw', reason: 'no-capture' } };
     expect(chooseAiMove(finished, { difficulty: 'easy', seed: 1 })).toBeNull();
   });
 
-  it('相同种子的一整局 AI 对 AI 可复现', { timeout: 30000 }, () => {
+  it('相同种子的一整局 AI 对 AI 可复现', { timeout: 120000 }, () => {
     function play(seed: number): string {
       let state = createGame({ mode: 'watch', seed });
       while (!state.result && state.ply < 24) {

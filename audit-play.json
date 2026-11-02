@@ -1,0 +1,96 @@
+{
+  "url": "http://127.0.0.1:4319/",
+  "checks": [
+    {
+      "name": "页面首屏加载",
+      "ok": true,
+      "detail": "129ms"
+    },
+    {
+      "name": "无失败请求",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "所有本地资源 2xx",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "无远程资源请求",
+      "ok": true,
+      "detail": "5 个资源"
+    },
+    {
+      "name": "进入观战 · AI 对 AI",
+      "ok": true,
+      "detail": "pieces=16"
+    },
+    {
+      "name": "进入人机对战",
+      "ok": true,
+      "detail": "pieces=16"
+    },
+    {
+      "name": "进入本地双人",
+      "ok": true,
+      "detail": "pieces=16"
+    },
+    {
+      "name": "选子后出现合法落点",
+      "ok": true,
+      "detail": "3 个"
+    },
+    {
+      "name": "落子后交换行棋方",
+      "ok": true,
+      "detail": "赤霞山 -> 苍岚泽"
+    },
+    {
+      "name": "棋谱记录一手",
+      "ok": true,
+      "detail": "1 条"
+    },
+    {
+      "name": "中文记谱格式正确",
+      "ok": true,
+      "detail": "赤·象 0,6行0,5"
+    },
+    {
+      "name": "观战对局持续推进直至终局",
+      "ok": true,
+      "detail": "8 手，苍岚泽入穴获胜"
+    },
+    {
+      "name": "终局覆盖层出现",
+      "ok": true,
+      "detail": "苍岚泽入穴获胜"
+    },
+    {
+      "name": "终局后仍可调出重来一局",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "全程无控制台错误",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "移动端棋盘完整可见",
+      "ok": true,
+      "detail": "h=596"
+    },
+    {
+      "name": "移动端无横向溢出",
+      "ok": true,
+      "detail": "0px"
+    },
+    {
+      "name": "移动端无控制台错误",
+      "ok": true,
+      "detail": ""
+    }
+  ],
+  "errors": []
+}
